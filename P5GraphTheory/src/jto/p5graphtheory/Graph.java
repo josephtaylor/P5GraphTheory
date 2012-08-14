@@ -8,37 +8,84 @@ import java.util.Iterator;
 import processing.core.PApplet;
 import java.util.TreeSet;
 
+/**
+ *  This is the <code>Graph</code> class. This is the main class for the
+ *  graph theory library. </br></br>
+ *  A graph is an ordered pair of sets (V, E), where V is a set of Vertices
+ *  and can be any set. E is a set of 2-element subsets of V, called Edges.
+ *  </br></br>
+ *  This class allows for the modeling of Graph objects.
+ *  This class also contains several static methods for performing operations
+ *  on graphs and creating certain types of graphs.</br></br>
+ *  This library is meant to provide simple ways to visualize graphs and
+ *  graph theory algorithms. Graph data structures can also be used to model
+ *  many things.
+ *
+ *
+ *  @author J. Taylor O'Connor
+ *  @version 2012.08.14
+ */
 public class Graph
 {
     private TreeSet<Vertex> vertices;
     private TreeSet<Edge> edges;
 
+    /**
+     * This is the constructor for <code>Graph</code> objects.
+     */
     public Graph()
     {
         edges = new TreeSet<Edge>();
         vertices = new TreeSet<Vertex>();
     }
 
+    /**
+     * Adds a vertex to the TreeSet of Vertices or does nothing if
+     * the vertex is already in the graph.
+     *
+     * @param v the <code>Vertex</code>
+     */
     public void addVertex(Vertex v) {
         vertices.add(v);
     }
 
+    /**
+     * Removes the <code>Vertex</code> from the <code>Graph</code> if it is
+     * present, or does nothing if it is not present. If the vertex is removed
+     * all of the edges incident to it are also removed.
+     *
+     * @param v the <code>Vertex</code> to be removed.
+     */
     public void removeVertex(Vertex v) {
         vertices.remove(v);
-        Iterator it = edges.iterator();
+        Iterator<Edge> it = edges.iterator();
         while(it.hasNext()) {
-            Edge nextEdge = (Edge) it.next();
+            Edge nextEdge = it.next();
             if(nextEdge.isIncidentTo(v)) {
                 it.remove();
             }
         }
     }
 
+    /**
+     * This clears all the vertices in the graph.</br>
+     * This also clears all of the edges, because the edges cannot
+     * exist in the absense of vertices.
+     *
+     */
     public void clearVertices() {
         vertices.clear();
         edges.clear();
     }
 
+    /**
+     * Searches the <code>Graph</code> for the given <code>Vertex</code>.
+     *
+     * @param v the <code>Vertex</code> in question.
+     *
+     * @return true if the <code>Vertex</code> is contained in this
+     * <code>Graph</code>.
+     */
     public boolean containsVertex(Vertex v) {
         if(vertices.contains(v)) {
             return true;
@@ -48,6 +95,15 @@ public class Graph
         }
     }
 
+    /**
+     * This creates a new <code>Edge</code> connecting the two
+     * given vertices and adds it to the set of Edges.</br>
+     * If either of the two vertices of the new <code>Edge</code> are not in this
+     * <code>Graph</code>, then they are also added.
+     *
+     * @param a the first <code>Vertex</code>.
+     * @param b the second <code>Vertex</code>.
+     */
     public void addEdge(Vertex a, Vertex b) {
         Edge edge = new Edge(a, b);
         edges.add(edge);
@@ -57,16 +113,42 @@ public class Graph
         this.addVertex(b);
     }
 
+    /**
+     * This adds the given <code>Edge</code> to the <code>Graph</code>.</br>
+     * This also adds the Edge's vertices if they are not in the <code>Graph</code>.
+     *
+     * @param e the new <code>Edge</code> to be added.
+     */
     public void addEdge(Edge e) {
         edges.add(e);
         this.addVertex(e.getVertexA());
         this.addVertex(e.getVertexB());
     }
 
+    /**
+     * This removes the <code>Edge</code> containing the two vertices from the set
+     * of edges if it exists in the <code>Graph</code>.
+     *
+     * @param a the first <code>Vertex</code> in the <code>Edge</code>.
+     * @param b the second <code>Vertex</code> in the <code>Edge</code>.
+     */
     public void removeEdge(Vertex a, Vertex b) {
-        edges.remove(new Edge(a, b));
+        Edge e = new Edge(a, b);
+        edges.remove(e);
+        for(Vertex v : vertices) {
+            if(v.equals(a) ||
+                v.equals(b)) {
+                v.removeIncidentEdge(e);
+            }
+        }
     }
 
+    /**
+     * This removes the <code>Edge</code> from the set
+     * of edges if it exists in the <code>Graph</code>.
+     *
+     * @param e the <code>Edge</code> to be removed.
+     */
     public void removeEdge(Edge e) {
         edges.remove(e);
         for(Vertex v : vertices) {
@@ -77,11 +159,22 @@ public class Graph
         }
     }
 
+    /**
+     * This clears the set of Edges.
+     */
     public void clearEdges()
     {
         edges.clear();
     }
 
+    /**
+     * This tests to see if the <code>Graph</code> contains the given edge.
+     *
+     * @param e the <code>Edge</code> in question.
+     *
+     * @return <code>true</code> if the <code>Edge</code> is contained in the
+     * <code>Graph</code>.
+     */
     public boolean containsEdge(Edge e) {
         if(edges.contains(e)) {
             return true;
@@ -91,11 +184,23 @@ public class Graph
         }
     }
 
+    /**
+     * Returns the TreeSet of vertices.
+     *
+     * @return a TreeSet of <code>Vertex</code> objects that are the
+     * vertices of the <code>Graph</code>.
+     */
     public TreeSet<Vertex> getVertices()
     {
         return vertices;
     }
 
+    /**
+     * Returns the TreeSet of edges.
+     *
+     * @return a TreeSet of <code>Edge</code> objects that are the
+     * edges of the <code>Graph</code>.
+     */
     public TreeSet<Edge> getEdges()
     {
         return edges;
@@ -214,7 +319,6 @@ public class Graph
      *
      * @return A spanning tree containing the vertices of the source Graph.
      */
-    @SuppressWarnings("unchecked")
     public static Graph spanningTree(Graph graph, Vertex initialVertex) {
 
         Graph spanningTree = new Graph();
@@ -269,7 +373,7 @@ public class Graph
         if(vertices.size() > 0) {
             for(Vertex v : vertices) {
                 while(v.getDegree() > degree) {
-                    v.removeIncidentEdge((Edge) v.getIncidentEdges().pollLast());
+                    v.removeIncidentEdge(v.getIncidentEdges().pollLast());
                 }
             }
         }
@@ -370,7 +474,7 @@ public class Graph
      *  This is the <code>DisjointSet</code> class.
      *  This is a simple implementation of a disjoint set data structure
      *  for use in the minimal spanning tree algorithm of the <code>
-     *  Graph</code>class.</br>
+     *  Graph</code> class.</br>
      *
      *  The structure is esentially a LinkedList of LinkedLists. <br><br>
      *  I've made this class public in case anyone who hasn't ever used

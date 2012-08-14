@@ -221,7 +221,7 @@ public class Vertex implements Comparable<Vertex>
     /**
      * Setter for the z-coordinate.
      *
-     * @param y the new z-coordinate.
+     * @param z the new z-coordinate.
      */
     public void setZ(float z) {
         vector.set(vector.x, vector.y, z);
@@ -265,9 +265,11 @@ public class Vertex implements Comparable<Vertex>
 
     /**
      * Tests whether this <code>Vertex</code> is adjacent to the other
-     * <code>Vertex</code>, meaning they are connected by an <code>Edge</code>.
+     * <code>Vertex</code>, meaning they are contained in an <code>Edge</code>.
      *
-     * @return true if the two vertices are connected by an <code>Edge</code>.
+     * @param v the <code>Vertex</code> in question.
+     *
+     * @return true if the two vertices are contained in an <code>Edge</code>.
      */
     public boolean isAdjacentTo(Vertex v) {
         return adjacentVertices.contains(v);
@@ -304,12 +306,12 @@ public class Vertex implements Comparable<Vertex>
     }
 
     /**
-     * The method inhereted from the Comparable interface. This compares
+     * The method inhereted from the Comparable interface. <br>This compares
      * two vertices based on their Euclidean distance from the origin.
      *
      * @param otherVertex the other <code>Vertex</code> to be compared.
      *
-     * @return -1 if this is closer, 1 if this is farther, 0 if this is the same
+     * @return -1 if this is closer, <br>1 if this is farther, <br>0 if this is the same
      * distance from the origin as the other <code>Vertex</code>.
      *
      */

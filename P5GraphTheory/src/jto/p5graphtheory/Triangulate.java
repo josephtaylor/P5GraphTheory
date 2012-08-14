@@ -2,7 +2,6 @@ package jto.p5graphtheory;
 
 
 import java.util.Collection;
-import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;
@@ -88,8 +87,7 @@ public class Triangulate {
     /* Check for coincident points */
     if ( Math.abs(t.getVertexA().getY() - t.getVertexB().getY()) < PApplet.EPSILON
         && Math.abs(t.getVertexB().getY()-t.getVertexC().getY()) < PApplet.EPSILON ) {
-      System.err.println("CircumCircle: Points are coincident." +
-          t.getVertexA().getY() + " " + t.getVertexB().getY());
+      System.err.println("CircumCircle: Points are coincident.");
       return false;
     }
 

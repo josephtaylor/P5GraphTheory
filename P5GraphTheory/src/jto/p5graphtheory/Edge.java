@@ -12,9 +12,10 @@ import processing.core.PVector;
  *  interface.</br>
  *  To associate a different cost to the edge (other than length) you can use
  *  the setCost() method, which will overwrite the length field with the
- *  new cost.
+ *  new cost.<br><br>
+ *  NOTE: These are undirected edges, meaning that an edge with vertices {a, b}
+ *  is the same as an edge with vertices {b, a}.
  *
- *  @implements Comparable
  *
  *
  *  @author J. Taylor O'Connor
