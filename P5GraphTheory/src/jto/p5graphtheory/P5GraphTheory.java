@@ -39,7 +39,7 @@ public class P5GraphTheory extends PApplet {
 	        Object[] objVertices = graph.getVertices().toArray();
 	        Vertex start = (Vertex) objVertices[(int) Math.floor(Math.random() *
 	            (objVertices.length - 1))];
-	        Graph spanningTree = Graph.spanningTree(graph, start);
+	        Graph spanningTree = Graph.minimalSpanningTree(graph);
 	        TreeSet<Edge> edges = spanningTree.getEdges();
 	        if(edges.size() > 0) {
 	            Object[] edgeArray = edges.toArray();
@@ -83,6 +83,6 @@ public class P5GraphTheory extends PApplet {
 
 	public static void main(String args[])
 	{
-	    PApplet.main(new String[] {"p5graphtheory.P5GraphTheory"});
+	    PApplet.main(new String[] {"jto.p5graphtheory.P5GraphTheory"});
 	}
 }

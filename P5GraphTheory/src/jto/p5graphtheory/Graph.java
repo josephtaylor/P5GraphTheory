@@ -1,5 +1,6 @@
 package jto.p5graphtheory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -245,11 +246,29 @@ public class Graph
         return spanningTree;
     }
 
-    public static Graph chordalGraph(Graph graph) {
+    /**
+     * This will give you a k-regular graph, where k is the integer degree
+     * specified.  This means that every <code>Vertex</code> in the resulting
+     * <code>Graph</code> will have degree k.
+     * However, if the source <code>Graph</code> has vertices with degree < k,
+     * then those vertices will still have degree < k in the new <code>Graph</code>,
+     * and the graph will technically not be k-regular.
+     * This can be avoided by using a complete graph as the parameter to this
+     * method.<br><br>
+     * Note: the resulting graph will most likely not be planar.
+     *
+     * @param graph the source <code>Graph</code>.
+     * @param degree the integer determining the degree of each
+     * <code>Vertex</code>.
+     *
+     * @return A k-regular graph or a graph in which deg(v) <= the degree
+     * parameter for all vertices v in the graph.
+     */
+    public static Graph regularGraph(Graph graph, int degree) {
         TreeSet<Vertex> vertices = graph.getVertices();
         if(vertices.size() > 0) {
             for(Vertex v : vertices) {
-                while(v.getDegree() > 3) {
+                while(v.getDegree() > degree) {
                     v.removeIncidentEdge((Edge) v.getIncidentEdges().pollLast());
                 }
             }
@@ -262,6 +281,172 @@ public class Graph
             }
         }
         return result;
+    }
+
+    /**
+     * This will return a delaunay triangulation of the vertices in the
+     * source graph.<br>
+     * This uses the Triangulate library which can be found at:<br>
+     * <a href="http://wiki.processing.org/w/Triangulation">
+     * http://wiki.processing.org/w/Triangulation</a><br><br>
+     * Note: This method does not take the edges of the source graph into
+     * consideration. You will get the same result regardless of which
+     * edges are present in the graph.
+     *
+     * @param graph The source <code>Graph</code>.
+     *
+     * @return A planar triangulated <code>Graph</code>.
+     */
+    public static Graph triangulatedGraph(Graph graph) {
+
+        return Graph.triangulatedGraph(graph.getVertices());
+    }
+
+    /**
+     * This will return a delaunay triangulation of the collection of
+     * vertices.<br>
+     * This uses the Triangulate library which can be found at:<br>
+     * <a href="http://wiki.processing.org/w/Triangulation">
+     * http://wiki.processing.org/w/Triangulation</a>
+     *
+     * @param vertices A collection of Vertex objects to be triangulated.
+     *
+     * @return A <code>graph</code> that is a planar triangulation of the given
+     * collection of vertices.
+     *
+     */
+    public static Graph triangulatedGraph(Collection<Vertex> vertices) {
+        Graph result = new Graph();
+        TreeSet<Vertex> vertexSet = new TreeSet<Vertex>();
+        for(Vertex v : vertices) {
+            vertexSet.add(v);
+            result.addVertex(v);
+        }
+        ArrayList<Triangle> triangles = Triangulate.triangulate(vertexSet);
+        for(Triangle t : triangles) {
+            result.addEdge(new Edge(t.getVertexA(), t.getVertexB()));
+            result.addEdge(new Edge(t.getVertexC(), t.getVertexB()));
+            result.addEdge(new Edge(t.getVertexC(), t.getVertexA()));
+        }
+        return result;
+    }
+
+    /**
+     * This returns a list of triangles that make up the delaunay triangulation
+     * of the vertices in the source <code>Graph</code>.
+     * This is identical to the triangulate() method of the Triangulation
+     * library, which can be found here:</br>
+     * <a href="http://wiki.processing.org/w/Triangulation">
+     * http://wiki.processing.org/w/Triangulation</a>
+     *
+     * @param graph The source <code>Graph</code>.
+     *
+     * @return a Collection of <code>Triangle</code> objects that represent the
+     * trianglulation of the source <code>Graph</code>.
+     */
+    public static Collection<Triangle> toTriangles(Graph graph) {
+        return Triangulate.triangulate(graph.getVertices());
+    }
+
+    /**
+     * This returns a list of triangles that make up the delaunay triangulation
+     * of the vertices in the source <code>Graph</code>.
+     * This is identical to the triangulate() method of the Triangulation
+     * library, which can be found here:</br>
+     * <a href="http://wiki.processing.org/w/Triangulation">
+     * http://wiki.processing.org/w/Triangulation</a>
+     *
+     * @param vertices The collection of vertices to make up the triangulation.
+     *
+     * @return a Collection of <code>Triangle</code> objects that represent the
+     * trianglulation of the source <code>Graph</code>.
+     */
+    public static Collection<Triangle> toTriangles(Collection<Vertex> vertices) {
+        return Triangulate.triangulate(vertices);
+    }
+
+
+    /**
+     *  This is the <code>DisjointSet</code> class.
+     *  This is a simple implementation of a disjoint set data structure
+     *  for use in the minimal spanning tree algorithm of the <code>
+     *  Graph</code>class.</br>
+     *
+     *  The structure is esentially a LinkedList of LinkedLists. <br><br>
+     *  I've made this class public in case anyone who hasn't ever used
+     *  this kind of data structure wants to mess around with it.
+     *  @param <E>
+     *
+     *  @author J. Taylor O'Connor
+     *  @version 2012.08.14
+     */
+    public static class DisjointSet<E>
+    {
+        private LinkedList<LinkedList<E>> sets;
+
+        /**
+         * This is the constructor for <code>DisjointSet</code> objects.
+         */
+        public DisjointSet() {
+            sets = new LinkedList<LinkedList<E>>();
+        }
+
+        /**
+         * This creates a new LinkedList that contains the one object that
+         * is the parameter, and adds it to the list of LinkedLists.
+         *
+         * @param singleton the single data member that will make up the new
+         * LinkedList.
+         */
+        public void makeSet(E singleton) {
+            LinkedList<E> newSet = new LinkedList<E>();
+            newSet.add(singleton);
+            sets.add(newSet);
+        }
+
+        /**
+         * This method takes the list containing b and appends it to the list
+         * containing a. Then the original list containing b is removed from
+         * the overall list of LinkedLists.
+         *
+         * @param a the member whose list will get b's list appended to it.
+         * @param b the member whose list will be appended to a's list.
+         */
+        public void union(E a, E b) {
+            LinkedList<E> foundSet = null;
+            LinkedList<E> appendedSet = null;
+            for(LinkedList<E> set : sets) {
+                if(set.contains(a)) {
+                    foundSet = set;
+                }
+                else if(set.contains(b)) {
+                    appendedSet = set;
+                }
+            }
+            for(E element : appendedSet) {
+                foundSet.add(element);
+            }
+            sets.remove(appendedSet);
+        }
+
+        /**
+         * This returns the LinkedList in the list of LinkedLists that
+         * contains the element specified, or null if none of the lists
+         * contain the element.
+         *
+         * @param element the element to be found.
+         *
+         * @return the LinkedList containing the element.
+         */
+        public LinkedList<E> find(E element) {
+            for(LinkedList<E> set : sets) {
+                if(set.contains(element)) {
+                    return set;
+                }
+            }
+            return null;
+        }
+
     }
 }
 
