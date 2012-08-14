@@ -1,19 +1,20 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
 
 body {
-  padding:50px;
-  font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color:#777;
+  padding-top:20px;
+  padding-left:50px;
+  font:12px/1.5 Helvetica;
+  color:#AAA;
   font-weight:300;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color:#222;
-  margin:0 0 20px;
+  color:#999;
+  margin:0 0 5px;
 }
 
 p, ul, ol, table, pre, dl {
-  margin:0 0 20px;
+  margin:0 0 5px;
 }
 
 h1, h2, h3 {
@@ -25,11 +26,11 @@ h1 {
 }
 
 h2 {
-  color:#393939;
+  color:#777;
 }
 
 h3, h4, h5, h6 {
-  color:#494949;
+  color:#777;
 }
 
 a {
@@ -58,7 +59,7 @@ blockquote {
 }
 
 code, pre {
-  font-family:Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
+  font-family:Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal, Consolas;
   color:#333;
   font-size:12px;
 }
