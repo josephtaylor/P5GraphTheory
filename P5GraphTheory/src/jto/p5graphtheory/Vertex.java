@@ -127,14 +127,17 @@ public class Vertex implements Comparable<Vertex>
      * @param edge the <code>Edge</code> to be removed.
      */
     public void removeIncidentEdge(Edge edge) {
-        incidentEdges.remove(edge);
-        if(this.equals(edge.getVertexA())) {
-            adjacentVertices.remove(edge.getVertexB());
-            degree--;
-        }
-        else if(this.equals(edge.getVertexB())) {
-            adjacentVertices.remove(edge.getVertexA());
-            degree--;
+        if(edge != null) {
+            incidentEdges.remove(edge);
+
+            if(this.equals(edge.getVertexA())) {
+                adjacentVertices.remove(edge.getVertexB());
+                degree--;
+            }
+            else if(this.equals(edge.getVertexB())) {
+                adjacentVertices.remove(edge.getVertexA());
+                degree--;
+            }
         }
 
     }

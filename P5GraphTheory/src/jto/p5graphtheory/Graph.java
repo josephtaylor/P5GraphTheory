@@ -351,43 +351,6 @@ public class Graph
     }
 
     /**
-     * This will give you a k-regular graph, where k is the integer degree
-     * specified.  This means that every <code>Vertex</code> in the resulting
-     * <code>Graph</code> will have degree k.
-     * However, if the source <code>Graph</code> has vertices with degree < k,
-     * then those vertices will still have degree < k in the new <code>Graph</code>,
-     * and the graph will technically not be k-regular.
-     * This can be avoided by using a complete graph as the parameter to this
-     * method.<br><br>
-     * Note: the resulting graph will most likely not be planar.
-     *
-     * @param graph the source <code>Graph</code>.
-     * @param degree the integer determining the degree of each
-     * <code>Vertex</code>.
-     *
-     * @return A k-regular graph or a graph in which deg(v) <= the degree
-     * parameter for all vertices v in the graph.
-     */
-    public static Graph regularGraph(Graph graph, int degree) {
-        TreeSet<Vertex> vertices = graph.getVertices();
-        if(vertices.size() > 0) {
-            for(Vertex v : vertices) {
-                while(v.getDegree() > degree) {
-                    v.removeIncidentEdge(v.getIncidentEdges().pollLast());
-                }
-            }
-        }
-        Graph result = new Graph();
-        for(Vertex v : vertices) {
-            for(Object e : v.getIncidentEdges()) {
-                Edge edge = (Edge) e;
-                result.addEdge(edge);
-            }
-        }
-        return result;
-    }
-
-    /**
      * This will return a delaunay triangulation of the vertices in the
      * source graph.<br>
      * This uses the Triangulate library which can be found at:<br>
