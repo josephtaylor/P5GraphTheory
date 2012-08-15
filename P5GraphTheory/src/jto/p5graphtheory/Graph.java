@@ -268,13 +268,15 @@ public class Graph
 
             for(int i = 1; i < edgeArray.length; i++) {
                 Edge edge = (Edge) edgeArray[i];
-                if(vertexSet.find(edge.getVertexA()).contains(edge.getVertexB())) {
-                    //This edge would create a cycle.
-                }
-                else {
-                    spanningTree.addEdge(edge);
+                if(vertexSet.find(edge.getVertexA()) != null) {
+                    if(vertexSet.find(edge.getVertexA()).contains(edge.getVertexB())) {
+                        //This edge would create a cycle.
+                    }
+                    else {
+                        spanningTree.addEdge(edge);
 
-                    vertexSet.union(edge.getVertexA(), edge.getVertexB());
+                        vertexSet.union(edge.getVertexA(), edge.getVertexB());
+                    }
                 }
             }
         }
@@ -490,10 +492,12 @@ public class Graph
                     appendedSet = set;
                 }
             }
-            for(E element : appendedSet) {
-                foundSet.add(element);
+            if((foundSet != null) && appendedSet != null) {
+                for(E element : appendedSet) {
+                    foundSet.add(element);
+                }
+                sets.remove(appendedSet);
             }
-            sets.remove(appendedSet);
         }
 
         /**

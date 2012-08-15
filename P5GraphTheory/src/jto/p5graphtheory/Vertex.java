@@ -108,16 +108,18 @@ public class Vertex implements Comparable<Vertex>
      * @param edge the <code>Edge</code> to be added.
      */
     public void addIncidentEdge(Edge edge) {
-        incidentEdges.add(edge);
-        if(!edge.getVertexA().equals(this)) {
-            adjacentVertices.add(edge.getVertexA());
-            degree++;
-        }
-        else {
-            adjacentVertices.add(edge.getVertexB());
-            degree++;
-        }
+        if(edge != null) {
+            incidentEdges.add(edge);
 
+            if(!edge.getVertexA().equals(this)) {
+                adjacentVertices.add(edge.getVertexA());
+                degree++;
+            }
+            else {
+                adjacentVertices.add(edge.getVertexB());
+                degree++;
+            }
+        }
     }
 
     /**
